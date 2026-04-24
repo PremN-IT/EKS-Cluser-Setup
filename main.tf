@@ -18,7 +18,7 @@ terraform {
 provider "aws" {
   region = var.region
 }
-
+# module for vpc
 module "vpc" {
   source = "./modules/vpc"
 
