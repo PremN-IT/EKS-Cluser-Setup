@@ -26,8 +26,8 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::653082655378:role/Github-actions-role
-        aws-region: us-west-2
+        role-to-assume: $$ {{ secrets.AWS_ROLE_ARN }}
+        aws-region: $$ {{ secrets.AWS_REGION }}
         
         
     - name: Terraform Init
@@ -39,3 +39,6 @@ jobs:
     - name: Terraform Apply
       if: github.event_name == 'push'
       run: terraform apply -auto-approve
+
+    - name: Terraform Destroy
+      run: terraform destroy -auto-approve
