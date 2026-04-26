@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "demo-terraform-eks-state-s3-bucket-prod"
+    bucket         = "demo-terraform-eks-state-s3-bucket-dev"
     key            = "terraform.tfstate"
     region         = "us-west-2"
     encrypt        = true
@@ -17,7 +17,7 @@ terraform {
 provider "aws" {
   region = var.region
 }
-# module for vpc
+# module for vpc creation
 module "vpc" {
   source = "./modules/vpc"
 
