@@ -33,7 +33,7 @@ module "eks" {
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
-  vpc_id          = modules.vpc.vpc_id
-  subnet_ids      = modules.vpc.private_subnet_ids
+  vpc_id          = module.vpc.vpc_id
+  subnet_ids      = module.vpc.private_subnet_ids
   node_groups     = var.node_groups
 }
