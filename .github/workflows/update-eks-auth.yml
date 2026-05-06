@@ -2,7 +2,10 @@ name: Update EKS aws-auth
 
 on:
   workflow_dispatch:   # Manual trigger
-
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   update-auth:
     runs-on: ubuntu-latest
