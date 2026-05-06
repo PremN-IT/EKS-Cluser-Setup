@@ -30,7 +30,7 @@ jobs:
         aws-region: us-west-2
         
         
-    - name: Terraform Init
+    - name: Terraform Init apply
       run: terraform init
 
       
