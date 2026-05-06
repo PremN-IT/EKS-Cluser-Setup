@@ -1,0 +1,50 @@
+name: Update EKS aws-auth
+
+on:
+  workflow_dispatch:   # Manual trigger
+
+jobs:
+  update-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s \
+          https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --region us-west-2 \
+            --name my-eks-cluster
+
+      - name: Add EC2 Role to aws-auth
+        run: |
+          cat << EOF > aws-auth-patch.yaml
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: aws-auth
+            namespace: kube-system
+          data:
+            mapRoles: |
+              - rolearn: arn:aws:iam::653082655378:role/EC2-EKS-Access-Role
+                username: ec2-eks-admin
+                groups:
+                  - system:masters
+              - rolearn: arn:aws:iam::653082655378:role/<github-actions-role>
+                username: github-actions
+                groups:
+                  - system:masters
+          EOF
+          
+          kubectl apply -f aws-auth-patch.yaml
