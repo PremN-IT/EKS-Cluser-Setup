@@ -13,7 +13,7 @@ terraform {
     encrypt        = true
   }
 }
-
+# provider block
 provider "aws" {
   region = var.region
 }
